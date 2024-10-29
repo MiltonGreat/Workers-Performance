@@ -1,4 +1,4 @@
-# Workers-Performance
+# Employee Performance Prediction
 
 ### Summary and Recommendations
 
@@ -16,44 +16,43 @@ The Garment Industry is one of the key examples of the industrial globalization 
 
 #### 3. Data Analysis Steps
 
-Data Loading and Preprocessing:
+Data Cleaning:
 
-- The training and testing datasets are extracted from a ZIP file.
-- Duplicated columns are removed to avoid redundancy.
-- Missing values in the wip column are imputed using the median value to fill gaps in the data.
-- Feature scaling is applied to continuous variables (over_time, incentive, idle_time, etc.) to standardize them using StandardScaler.
+- Missing Value Imputation: For the wip column, missing values are imputed using the median value.
+- Feature Scaling: Continuous variables like over_time, incentive, idle_time, etc., are scaled using StandardScaler for consistent magnitude.
 
 Feature Engineering:
 
-- A Work Condition Index is created by taking the mean of wip, over_time, and incentive, which provides an aggregate measure of working conditions for each observation.
+- New features are created to enhance the model's predictive power.
+- The test set also has the work_condition_index feature but excludes cumulative_productivity and rolling_productivity_mean as they are dependent on the target.
 
-Splitting Data:
+Modeling:
 
-- The training dataset is split into training and validation sets, where 80% is used for training models, and 20% is used for validation.
+- The dataset is split into training (80%) and validation (20%) sets.
+- Three machine learning models are trained and evaluated: Linear Regression, Random Forest Regressor, Gradient Boosting Regressor
+- Each model is evaluated using metrics like Mean Absolute Error (MAE), Mean Squared Error (MSE), and R-squared (R²).
 
-Model Training and Evaluation
+Hyperparameter Tuning:
 
-Making Predictions:
+- Random Forest model is fine-tuned using GridSearchCV to optimize hyperparameters such as the number of estimators, maximum depth, and minimum samples split/leaf.
 
-- The best-performing model (Random Forest) is used to make predictions on the test set. The output includes the predicted employee productivity for the test set based on the features provided.
+Model Evaluation:
+
+- The Random Forest model is evaluated on the validation set and later used to predict productivity on the test dataset.
+- Key metrics (MAE, MSE, R²) and visualizations (Actual vs. Predicted values, Residual plots) are produced to assess model performance.
+
+Visualization:
+
+- Actual vs. Predicted Plot for the Random Forest model.
+- Residual Plot to check for patterns in the errors (residuals).
+- Feature Importance Plot to understand which features contributed the most to the predictions.
 
 #### 4. Key Findings
       
-Model Performance:
-
-- Although the R² score of 0.3095 shows that the model explains about 31% of the variance in productivity, there is room for improvement. This suggests that other factors not present in the dataset may be influencing productivity, or the feature engineering could be enhanced further.
-
-Predictions on Test Data:
-
-- The test set predictions show productivity estimates ranging from approximately 0.6717 to 0.8727. These predictions can be used to understand how employees are expected to perform under certain conditions.
-
-Feature Importance and Work Conditions:
-
-- The Work Condition Index is a useful aggregate feature that can help summarize the effect of multiple factors on employee productivity. 
-
-Missing Values Handling:
-
-- The project uses a straightforward approach to handling missing values by imputing the median for numeric columns (like wip). This method ensures that no data is lost, but it could be further improved by using more advanced imputation techniques or incorporating domain knowledge to better estimate missing values.
+- Linear Regression performed the worst with an R² score of 0.33, indicating that the model explains 33% of the variance in the productivity data.
+- Random Forest Regressor performed the best with an R² score of 0.50 before hyperparameter tuning, and after tuning, the performance slightly improved.
+- Gradient Boosting Regressor performed slightly worse than the Random Forest model, with an R² score of 0.49.
+- The final Random Forest model was used to predict employee productivity on the test set, and the predictions for the first few samples were close to the actual values, ranging from 0.71 to 0.87.
 
 #### 5. Next Steps
 
